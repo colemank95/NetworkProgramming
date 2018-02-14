@@ -1,4 +1,4 @@
-import Client
+from . import Client
 
 
 def main(host, port):
