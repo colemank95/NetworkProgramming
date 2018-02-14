@@ -32,15 +32,16 @@ def send_messages():
 
     msg = sys.stdin.readline()
     client_socket.send(msg)
+    sys.stdout.write('[Me] '); sys.stdout.flush()
 
 
 def recieveData():
 
     # Poll for data
     while True:
-        data, addr = client_socket.recv(4196)  # 4196
-
-        print(data)
+        data = client_socket.recv(4196)
+        if data:
+            print(data)
 
     client_socket.close()
 

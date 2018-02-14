@@ -33,6 +33,7 @@ def server():
                 text = s.recv(4096)
 
                 if text:
+                    print(text)
                     send_messages(server_socket, s, text)
 
 
