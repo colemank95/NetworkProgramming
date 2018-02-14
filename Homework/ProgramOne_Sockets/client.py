@@ -27,7 +27,7 @@ def client():
 
 
 def send_messages():
-
+    print("Sending message...\n")
     msg = sys.stdin.readline()
     client_socket.send(bytes(msg, 'UTF-8'))
     sys.stdout.write('[Me] ')
@@ -35,10 +35,10 @@ def send_messages():
 
 
 def recieveData():
-
+    print("Beginning recieve thread...\n")
     # Poll for data
     while True:
-        data = client_socket.recv(4196)
+        data = client_socket.recv(4196).decode('UTF-8')
         if data:
             print(data)
 
