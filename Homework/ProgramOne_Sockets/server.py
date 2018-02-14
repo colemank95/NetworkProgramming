@@ -40,7 +40,7 @@ def server():
 def send_messages(server_socket, sender_socket, text):
     for s in socket_list:
         if s != server_socket and s != sender_socket:
-            s.send(text)
+            s.send(bytes(text, 'UTF-8'))
 
 
 if __name__ == "__main__":

@@ -29,7 +29,7 @@ def client():
 def send_messages():
 
     msg = sys.stdin.readline()
-    client_socket.send(msg)
+    client_socket.send(bytes(msg, 'UTF-8'))
     sys.stdout.write('[Me] ')
     sys.stdout.flush()
 
