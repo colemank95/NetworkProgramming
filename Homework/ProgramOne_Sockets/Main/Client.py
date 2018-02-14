@@ -12,8 +12,8 @@ class Client:
         try:
             self._client_socket.connect((host, port))
 
-        except socket.error, exc:
-            print('Caught exception socket.error: %s' % exc)
+        except socket.error as errmsg:
+            print('Caught exception socket.error: %s' % errmsg)
             sys.exit()
 
         print('Connected')
