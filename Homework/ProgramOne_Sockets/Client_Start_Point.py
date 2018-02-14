@@ -1,4 +1,4 @@
-from . import Client
+from .Client import Client
 
 
 def main(host, port):

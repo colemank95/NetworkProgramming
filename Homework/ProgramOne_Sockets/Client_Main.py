@@ -1,4 +1,4 @@
-from . import Client_Start_Point
+from .Client_Start_Point import Client_Start_Point
 import sys
 
 if __name__ == '__main__':
