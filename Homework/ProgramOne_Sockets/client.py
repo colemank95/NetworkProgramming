@@ -1,6 +1,7 @@
 import sys
 import socket
 import threading
+from threading import Thread
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -21,18 +22,16 @@ def client():
         sys.exit()
 
     print('Connected')
-    sys.stdout.write('[Me] '); sys.stdout.flush()
-    thread = threading.Thread(target=recieveData(), args=())
-    thread_two = threading.Thread(target=send_messages(), args=())
-    thread.start()
-    thread_two.start()
+    sys.stdout.write('[Me] ')
+    sys.stdout.flush()
 
 
 def send_messages():
 
     msg = sys.stdin.readline()
     client_socket.send(msg)
-    sys.stdout.write('[Me] '); sys.stdout.flush()
+    sys.stdout.write('[Me] ')
+    sys.stdout.flush()
 
 
 def recieveData():
@@ -47,5 +46,6 @@ def recieveData():
 
 
 if __name__ == "__main__":
-
+    Thread(target=send_messages()).start()
+    Thread(target=recieveData()).start()
     sys.exit(client())
