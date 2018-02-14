@@ -3,49 +3,37 @@ import socket
 import threading
 from threading import Thread
 
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
+class Client:
 
-def client():
+    def __init__(self, host, port):
 
-    if(len(sys.argv) != 3):
-        print ('Incorrect arguments. usage: python client.py hostname port')
-        sys.exit()
+        self._client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            self._client_socket.connect((host, port))
 
-    host = sys.argv[1]
-    port_num = int(sys.argv[2])
-    try:
-        client_socket.connect((host, port_num))
+        except socket.error, exc:
+            print('Caught exception socket.error: %s' % exc)
+            sys.exit()
 
-    except:
-        print('Can not connect')
-        sys.exit()
+        print('Connected')
+        sys.stdout.write('[Me] ')
+        sys.stdout.flush()
+        Thread(target=self.send_messages()).start()
+        Thread(target=self.recieveData()).start()
 
-    print('Connected')
-    sys.stdout.write('[Me] ')
-    sys.stdout.flush()
+    def send_messages(self):
+        msg = sys.stdin.readline()
+        self._client_socket.send(bytes(msg, 'UTF-8'))
+        sys.stdout.write('[Me] ')
+        sys.stdout.flush()
 
+    def recieveData(self):
+        print("Beginning recieve thread...\n")
+        # Poll for data
+        while True:
+            data = self._client_socket.recv(4196).decode('UTF-8')
+            if data:
+                print(data)
 
-def send_messages():
-    print("Sending message...\n")
-    msg = sys.stdin.readline()
-    client_socket.send(bytes(msg, 'UTF-8'))
-    sys.stdout.write('[Me] ')
-    sys.stdout.flush()
-
-
-def recieveData():
-    print("Beginning recieve thread...\n")
-    # Poll for data
-    while True:
-        data = client_socket.recv(4196).decode('UTF-8')
-        if data:
-            print(data)
-
-    client_socket.close()
-
-
-if __name__ == "__main__":
-    Thread(target=send_messages()).start()
-    Thread(target=recieveData()).start()
-    sys.exit(client())
+        self._client_socket.close()
