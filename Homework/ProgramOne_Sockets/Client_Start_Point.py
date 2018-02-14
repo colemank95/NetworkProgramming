@@ -3,4 +3,5 @@ import Client
 
 def main(host, port):
 
-	client = Client()
+	client = Client(host, port)
+	client.run()

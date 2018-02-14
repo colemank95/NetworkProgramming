@@ -19,6 +19,8 @@ class Client:
         print('Connected')
         sys.stdout.write('[Me] ')
         sys.stdout.flush()
+
+    def run(self):
         Thread(target=self.send_messages()).start()
         Thread(target=self.recieveData()).start()
 
