@@ -44,7 +44,6 @@ def accept_connections():
 def send_messages(server_socket, sender_socket, msg):
     for s in socket_list:
         if s != server_socket and s != sender_socket:
-            msg = sender_socket.gethostbyname() + ": " + msg
             s.send(msg.encode())
 
 
