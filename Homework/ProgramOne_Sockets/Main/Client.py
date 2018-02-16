@@ -28,6 +28,7 @@ class Client:
             self._send_messages()
 
     def send_messages(self):
+        print('Beginning send_thread...')
         msg = sys.stdin.readline()
         self._client_socket.send(bytes(msg, 'UTF-8'))
         sys.stdout.write('[Me] ')
