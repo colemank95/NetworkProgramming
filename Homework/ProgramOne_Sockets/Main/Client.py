@@ -25,12 +25,12 @@ class Client:
         Thread(target=self.recieveData).start()
         Thread(target=self.send_messages).start()
         print('You can now chat...')
+        sys.stdout.write('--> ')
+        sys.stdout.flush()
         while True:
             self.send_messages()
 
     def send_messages(self):
-        sys.stdout.write('--> ')
-        sys.stdout.flush()
         msg = sys.stdin.readline()
         msg = "From " + socket.gethostname() + ": " + msg
         self._client_socket.send(bytes(msg, 'UTF-8'))
