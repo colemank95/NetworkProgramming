@@ -14,6 +14,7 @@ server_socket.listen(5)
 print('Socket Created')
 # this prevents us from losing our port every time we kill the process and restart it
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+server_socket.setblocking(0)
 socket_list.append(server_socket)
 
 def server():
