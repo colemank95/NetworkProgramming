@@ -1,6 +1,7 @@
 import socket
 import sys
 from threading import Thread
+import select
 
 # define some frequently used variables
 PORT = 58687
@@ -16,10 +17,13 @@ print('Socket Created')
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 socket_list.append(server_socket)
 
+
 def server():
     Thread(target=accept_connections).start()
     while True:
-        for s in socket_list:
+        ready_to_read, ready_to_write, in_error = select.select(
+            socket_list, [], [], 0)
+        for s in ready_to_read:
             if s != server_socket:
                 msg = s.recv(4096).decode()
                 if msg:
