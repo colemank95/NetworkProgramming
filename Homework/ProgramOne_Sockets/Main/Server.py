@@ -14,10 +14,10 @@ def server():
     while True:
         for s in socket_list:
             if s != server_socket:
-                text = s.recv(4096)
-                if text:
-                    send_messages(server_socket, s, text)
-                    print(text)
+                msg = s.recv(4096)
+                if msg:
+                    send_messages(server_socket, s, msg)
+                    print(msg).decode()
         continue
 
 
@@ -29,10 +29,10 @@ def accept_connections():
         socket_list.append(new_socket)
 
 
-def send_messages(server_socket, sender_socket, text):
+def send_messages(server_socket, sender_socket, msg):
     for s in socket_list:
         if s != server_socket and s != sender_socket:
-            s.send(text, 'UTF-8')
+            s.send(msg)
 
 
 if __name__ == "__main__":
