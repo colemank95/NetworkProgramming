@@ -10,7 +10,7 @@ class Client:
         self._port = port
 
     def connect(self):
-        self._client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self._client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             self._client_socket.connect((self._host, self._port))
             print('Connected to: ' + self._host)
