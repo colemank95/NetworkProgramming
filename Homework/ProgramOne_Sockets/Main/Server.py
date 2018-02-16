@@ -3,7 +3,7 @@ import sys
 from threading import Thread
 
 # define some frequently used variables
-PORT = 58683
+PORT = 58682
 BUFFER = 4096
 # create a list to maintain all socket connections
 socket_list = []
@@ -14,10 +14,10 @@ def server():
     while True:
         for s in socket_list:
             if s != server_socket:
-                msg = s.recv(4096)
+                msg = s.recv(4096).decode()
                 if msg:
                     send_messages(server_socket, s, msg)
-                    print(msg).decode()
+                    print(msg)
         continue
 
 
