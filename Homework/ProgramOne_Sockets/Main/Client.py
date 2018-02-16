@@ -20,8 +20,12 @@ class Client:
         sys.stdout.flush()
 
     def run(self):
+        print('Starting Threads')
         Thread(target=self.send_messages()).start()
         Thread(target=self.recieveData()).start()
+        print('You can now chat...')
+        while True:
+            self._send_messages()
 
     def send_messages(self):
         msg = sys.stdin.readline()
@@ -36,5 +40,6 @@ class Client:
             data = self._client_socket.recv(4196).decode('UTF-8')
             if data:
                 print(data)
+            continue
 
         self._client_socket.close()

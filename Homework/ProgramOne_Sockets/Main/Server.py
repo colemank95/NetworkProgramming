@@ -20,6 +20,8 @@ socket_list.append(server_socket)
 
 
 def server():
+    Thread(target=accept_connections()).start()
+    Thread(target=server()).start()
     while True:
         for s in socket_list:
             if s != server_socket:
@@ -32,6 +34,7 @@ def server():
 
 def accept_connections():
     while True:
+        print('Waiting on Connections')
         new_socket, new_socket_addr = server_socket.accept()
         print("New connection")
         socket_list.append(new_socket)
@@ -44,6 +47,4 @@ def send_messages(server_socket, sender_socket, text):
 
 
 if __name__ == "__main__":
-    Thread(target=accept_connections()).start()
-    Thread(target=server()).start()
-    sys.exit(server())
+    server()
