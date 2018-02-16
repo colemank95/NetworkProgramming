@@ -34,6 +34,8 @@ class Client:
         msg = sys.stdin.readline()
         msg = "From " + socket.gethostname() + ": " + msg
         self._client_socket.send(bytes(msg, 'UTF-8'))
+        sys.stdout.write('--> ')
+        sys.stdout.flush()
 
     def recieveData(self):
         print("Beginning recieve thread...\n")
