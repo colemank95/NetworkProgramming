@@ -44,9 +44,8 @@ class Client:
             try:
                 data = self._client_socket.recv(4196).decode('UTF-8')
                 if data:
+                    print("\n")
                     print(data)
-                    sys.stdout.write('--> ')
-                    sys.stdout.flush()
             except socket.error:
                 continue
 
