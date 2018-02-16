@@ -32,7 +32,7 @@ class Client:
         sys.stdout.write('--> ')
         sys.stdout.flush()
         msg = sys.stdin.readline()
-        msg = "From " + self._client_socket.gethostname() + ": " + msg
+        msg = "From " + socket.gethostname() + ": " + msg
         self._client_socket.send(bytes(msg, 'UTF-8'))
 
     def recieveData(self):
