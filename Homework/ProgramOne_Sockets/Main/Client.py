@@ -13,6 +13,7 @@ class Client:
         self._client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
             self._client_socket.connect((self._host, self._port))
+            print('Connected to: ' self._host)
 
         except socket.error as errmsg:
             print('Caught exception socket.error: %s' % errmsg)
