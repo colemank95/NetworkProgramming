@@ -6,18 +6,17 @@ from threading import Thread
 class Client:
 
     def __init__(self, host, port):
+        self._host = host
+        self._port = port
 
+    def connect(self):
         self._client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
-            self._client_socket.connect((host, port))
+            self._client_socket.connect((self._host, self._port))
 
         except socket.error as errmsg:
             print('Caught exception socket.error: %s' % errmsg)
             sys.exit()
-
-        print('Connected')
-        sys.stdout.write('[Me] ')
-        sys.stdout.flush()
 
     def run(self):
         print('Starting Threads')
