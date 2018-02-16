@@ -43,7 +43,6 @@ class Client:
 
             except socket.error as errmsg:
                 print('Caught exception socket.error: %s' % errmsg)
-                sys.exit(1)
 
             if data:
                 print(data)
