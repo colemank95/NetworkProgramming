@@ -8,18 +8,15 @@ BUFFER = 4096
 # create a list to maintain all socket connections
 socket_list = []
 
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind((socket.gethostname(), PORT))
-server_socket.listen(5)
-print('Socket Created')
-
-# this prevents us from losing our port every time we kill the process and restart it
-server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
-socket_list.append(server_socket)
-
 
 def server():
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind((socket.gethostname(), PORT))
+    server_socket.listen(5)
+    print('Socket Created')
+    # this prevents us from losing our port every time we kill the process and restart it
+    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    socket_list.append(server_socket)
     Thread(target=accept_connections).start()
     while True:
         for s in socket_list:
