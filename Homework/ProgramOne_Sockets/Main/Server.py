@@ -25,7 +25,7 @@ def accept_connections():
     while True:
         print("Waiting for a connection...")
         new_socket, new_socket_addr = server_socket.accept()
-        print("New connection with: " + new_socket_addr)
+        print("New connection with: " + str(new_socket_addr))
         socket_list.append(new_socket)
 
 
