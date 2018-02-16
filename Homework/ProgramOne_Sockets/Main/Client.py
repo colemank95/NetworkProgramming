@@ -1,6 +1,5 @@
 import sys
 import socket
-import threading
 from threading import Thread
 
 
