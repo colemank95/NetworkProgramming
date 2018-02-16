@@ -24,7 +24,7 @@ def server():
                 msg = s.recv(4096).decode()
                 if msg:
                     send_messages(server_socket, s, msg)
-                    print(msg.encode())
+                    print(msg)
         continue
 
 
@@ -39,7 +39,7 @@ def accept_connections():
 def send_messages(server_socket, sender_socket, msg):
     for s in socket_list:
         if s != server_socket and s != sender_socket:
-            s.send(msg)
+            s.send(msg.encode())
 
 
 if __name__ == "__main__":
