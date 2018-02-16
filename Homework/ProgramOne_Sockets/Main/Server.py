@@ -17,7 +17,7 @@ def server():
                 msg = s.recv(4096).decode()
                 if msg:
                     send_messages(server_socket, s, msg)
-                    print(msg)
+                    print(msg.encode())
         continue
 
 
