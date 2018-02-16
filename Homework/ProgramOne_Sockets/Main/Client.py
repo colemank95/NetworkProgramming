@@ -14,6 +14,7 @@ class Client:
         try:
             self._client_socket.connect((self._host, self._port))
             print('Connected to: ' + self._host)
+            self._client_socket.setblocking(0)
 
         except socket.error as errmsg:
             print('Caught exception socket.error: %s' % errmsg)

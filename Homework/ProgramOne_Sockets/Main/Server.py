@@ -3,7 +3,7 @@ import sys
 from threading import Thread
 
 # define some frequently used variables
-PORT = 58680
+PORT = 58689
 BUFFER = 4096
 # create a list to maintain all socket connections
 socket_list = []
