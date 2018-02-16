@@ -21,8 +21,8 @@ class Client:
 
     def run(self):
         print('Starting Threads')
-        Thread(target=self.recieveData()).start()
-        Thread(target=self.send_messages()).start()
+        Thread(target=self.recieveData.start())
+        Thread(target=self.send_messages.start())
         print('You can now chat...')
         while True:
             self._send_messages()
