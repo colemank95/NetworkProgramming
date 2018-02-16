@@ -19,8 +19,13 @@ socket_list.append(server_socket)
 
 
 def server():
+
     Thread(target=accept_connections).start()
     while True:
+        # the select object is necessary in python to prevent connection errors
+        # caused by trying to recv data on a socket that has no data buffered
+        # ready_to_read is a list of sockets in the socket_list
+        # that has buffered data ready to be recv'd
         ready_to_read, ready_to_write, in_error = select.select(
             socket_list, [], [], 0)
         for s in ready_to_read:
@@ -33,6 +38,7 @@ def server():
 
 
 def accept_connections():
+    # handles new connections
     while True:
         print("Waiting for a connection...")
         new_socket, new_socket_addr = server_socket.accept()
@@ -42,8 +48,11 @@ def accept_connections():
 
 
 def send_messages(server_socket, sender_socket, msg):
+    # broadcast messages to clients
     for s in socket_list:
         if s != server_socket and s != sender_socket:
+            # python3.x requires text strings to be encoded
+            # before being sent as byte streams
             s.send(msg.encode())
 
 

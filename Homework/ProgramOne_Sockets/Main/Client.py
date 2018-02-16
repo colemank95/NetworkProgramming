@@ -25,6 +25,7 @@ class Client:
         Thread(target=self.recieveData).start()
         Thread(target=self.send_messages).start()
         print('You can now chat...')
+        # formatting for the chat terminal
         sys.stdout.write('--> ')
         sys.stdout.flush()
         while True:
@@ -33,6 +34,8 @@ class Client:
     def send_messages(self):
         msg = sys.stdin.readline()
         msg = "From " + socket.gethostname() + ": " + msg
+        # similar to the .encode() function
+        # text must be encoded to bytes before being sent
         self._client_socket.send(bytes(msg, 'UTF-8'))
         sys.stdout.write('--> ')
         sys.stdout.flush()
@@ -42,13 +45,15 @@ class Client:
         # Poll for data
         while True:
             try:
+                # recv'd data must be decoded before being presented as text
                 data = self._client_socket.recv(4196).decode('UTF-8')
                 if data:
                     print("\n")
                     print(data)
                     sys.stdout.write('--> ')
                     sys.stdout.flush()
-            except socket.error:
+            except socket.error as errmsg:
+                print("Socket error caught: %s" % errmsg)
                 continue
 
         self._client_socket.close()
