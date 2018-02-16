@@ -20,8 +20,8 @@ socket_list.append(server_socket)
 
 
 def server():
-    Thread(target=accept_connections.start())
-    Thread(target=server.start())
+    Thread(target=accept_connections).start()
+    Thread(target=server).start()
     while True:
         for s in socket_list:
             if s != server_socket:
