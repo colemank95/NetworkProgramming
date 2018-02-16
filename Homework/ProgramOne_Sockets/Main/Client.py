@@ -42,7 +42,7 @@ class Client:
                 data = self._client_socket.recv(4196).decode('UTF-8')
                 if data:
                     print(data)
-            except socket.error as errmsg:
-                print('Caught exception socket.error: %s' % errmsg)
+            except socket.error:
+                continue
 
         self._client_socket.close()
