@@ -21,7 +21,6 @@ socket_list.append(server_socket)
 
 def server():
     Thread(target=accept_connections).start()
-    Thread(target=server).start()
     while True:
         for s in socket_list:
             if s != server_socket:
@@ -34,8 +33,9 @@ def server():
 
 def accept_connections():
     while True:
+        print("Waiting for a connection...")
         new_socket, new_socket_addr = server_socket.accept()
-        print("New connection")
+        print("New connection with: " + new_socket_addr)
         socket_list.append(new_socket)
 
 

@@ -28,17 +28,22 @@ class Client:
             self.send_messages()
 
     def send_messages(self):
-        print('Beginning send_thread...')
+        sys.stdout.write('--> ')
+        sys.stdout.flush()
         msg = sys.stdin.readline()
         self._client_socket.send(bytes(msg, 'UTF-8'))
-        sys.stdout.write('[Me] ')
-        sys.stdout.flush()
 
     def recieveData(self):
         print("Beginning recieve thread...\n")
         # Poll for data
         while True:
-            data = self._client_socket.recv(4196).decode('UTF-8')
+            try:
+                data = self._client_socket.recv(4196).decode('UTF-8')
+
+            except socket.error as errmsg:
+                print('Caught exception socket.error: %s' % errmsg)
+                sys.exit(1)
+
             if data:
                 print(data)
             continue
