@@ -2,12 +2,13 @@ import socket
 from threading import Thread
 import select
 import sys
+import time
 
 
 class Server:
 
     def __init__(self):
-        self._PORT = 58686
+        self._PORT = 58684
         self._BUFFER_SIZE = 4096
         self._socket_list = []
         # duplicated list beacuse "select" doesn't like lists of tuples
@@ -22,10 +23,11 @@ class Server:
         self._server_socket.setsockopt(
             socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._socket_read_list.append(self._server_socket)
-        self._socket_list.append(self._server_socket)
+        self._socket_list.append([self._server_socket])
 
     def run(self):
-        Thread(target=self._accept_connections).start()
+        print("Starting Connection Listener...")
+        Thread(target=self.accept_connections).start()
         while True:
             # the select object is necessary in python to prevent connection errors
             # caused by trying to recv data on a socket that has no data buffered
@@ -33,58 +35,64 @@ class Server:
             # that has buffered data ready to be recv'd
             ready_to_read, ready_to_write, in_error = select.select(
                 self._socket_read_list, [], [], 0)
-            for s in ready_to_read:
+            for socket_index, s in enumerate(ready_to_read):
                 if s != self._server_socket:
-                    msg = s.recv(self._BUFFER_SIZE).decode()
+                    # this is pretty bad to do i think....
+                    msg = s.recv(999999999).decode()
                     if msg:
                         msg_array = msg.split()
-                        socket_index = s.index()
-                        if msg_array[0] == ['s']:
-                            self._validate_initial_message(msg_array, socket_index)
-                            self._handle_initial_message(
+                        if msg_array[0] == 's':
+                            print(msg_array)
+                            # self.validate_initial_message(msg_array, socket_index)
+                            self.handle_initial_message(
                                 msg_array, socket_index)
-                        if msg_array[0] == ['m']:
-                            self._validate_measurement_message(msg_array, socket_index)
-                            self._handle_measurement_message(msg_array, socket_index)
-                            self._echo_messages(self._server_socket, s, msg)
-                        if msg_array[0] == ['t']:
+                        if msg_array[0] == 'm':
+                            # self.validate_measurement_message(msg_array, socket_index)
+                            self.handle_measurement_message(msg_array, socket_index)
+                            # print(msg)
+                            print("Recieved data.")
+                            self.echo_messages(self._server_socket, s, msg)
+                        if msg_array[0] == 't':
                             if len(msg_array) != 1:
-                                self._send_failure(socket_index, 3)
-                        print(msg)
+                                self.send_failure(socket_index, 3)
+                            self._socket_read_list.remove(s)
+                            s.close()
             continue
 
     def validate_measurement_message(self, msg_array, socket_index):
         if msg_array[0] != 'm':
-            self._send_failure(self._socket_list[socket_index], 2)
+            self.send_failure(self._socket_list[socket_index][0], 2)
         if msg_array[1] != self._socket_list[socket_index][5] + 1:
-            self._send_failure(self._socket_list[socket_index], 2)
+            self.send_failure(self._socket_list[socket_index], 2)
 
     def handle_measurement_message(self, msg_array, socket_index):
         self._socket_list[socket_index][5] = self._socket_list[socket_index][5] + 1
 
     def handle_initial_message(self, msg_array, socket_index):
         # using tuples to store sockets along with their relevant information
+        i = 0
         for element in msg_array:
             self._socket_list[socket_index].append(element)
+            i = i + 1
         # setting up a way to track sequence numbers
         self._socket_list[socket_index][5] = 0
-        self._send_success(self._socket_list[socket_index])
+        # self.send_success(self._socket_list[socket_index][0])
 
     def validate_initial_message(self, msg_array, socket_index):
         if msg_array[0] != 's':
-            self._send_failure(self._socket_list[socket_index], 1)
-        elif msg_array[1] != "rtt" | "tput":
-            self._send_failure(self._socket_list[socket_index], 1)
+            self.send_failure(self._socket_list[socket_index][0], 1)
+        elif msg_array[1] != 'rtt' or 'tput':
+            self.send_failure(self._socket_list[socket_index][0], 1)
         elif not isinstance(msg_array[2], int):
-            self._send_failure(self._socket_list[socket_index], 1)
+            self.send_failure(self._socket_list[socket_index][0], 1)
         elif not isinstance(msg_array[3], int):
-            self._send_failure(self._socket_list[socket_index], 1)
+            self.send_failure(self._socket_list[socket_index][0], 1)
         elif not isinstance(msg_array[4], float):
-            self._send_failure(self._socket_list[socket_index], 1)
+            self.send_failure(self._socket_list[socket_index][0], 1)
         else:
             # setting up a way to track sequence numbers
             self._socket_list[socket_index][5] = 0
-            self._send_success(self._socket_list[socket_index])
+            # self.send_success(self._socket_list[socket_index][0])
 
     def send_failure(self, send_socket, failure_type):
         if failure_type == 1:
@@ -119,7 +127,9 @@ class Server:
     def echo_messages(self, server_socket, sender_socket, msg):
         # broadcast messages to clients
         for s in self._socket_read_list:
-            if s != self._server_socket and s != sender_socket:
+            if s != self._server_socket:
                 # python3.x requires text strings to be encoded
                 # before being sent as byte streams
+                msg = msg + " " + str(time.time())
+                print("Sending Data.")
                 s.send(msg.encode())
