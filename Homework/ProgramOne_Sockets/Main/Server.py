@@ -8,11 +8,12 @@ import time
 class Server:
 
     def __init__(self):
-        self._PORT = 58684
+        self._PORT = 58685
         self._BUFFER_SIZE = 4096
         self._socket_list = []
         # duplicated list beacuse "select" doesn't like lists of tuples
         self._socket_read_list = []
+        self._delay = 0
 
     def build(self):
         self._server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -77,6 +78,7 @@ class Server:
         # setting up a way to track sequence numbers
         self._socket_list[socket_index][5] = 0
         # self.send_success(self._socket_list[socket_index][0])
+        self._delay = self._socket_list[socket_index][4]
 
     def validate_initial_message(self, msg_array, socket_index):
         if msg_array[0] != 's':
@@ -127,7 +129,8 @@ class Server:
     def echo_messages(self, server_socket, sender_socket, msg):
         # broadcast messages to clients
         for s in self._socket_read_list:
-            if s != self._server_socket:
+            if s != self._server_socket:                
+                time.sleep(int(self._delay))
                 # python3.x requires text strings to be encoded
                 # before being sent as byte streams
                 msg = msg + " " + str(time.time())

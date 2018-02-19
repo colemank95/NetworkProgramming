@@ -17,7 +17,7 @@ class Client:
         self._PROBES = 15
         self._LOOP = 1
         self._MSG_SIZE = 0
-        self._SERVER_DELAY = 0
+        self._SERVER_DELAY = 5
         self._PAYLOAD = ""
         self._RTT_array = []
         self._t1_check = 0
@@ -130,7 +130,6 @@ class Client:
         # self.getProbeNum()
         self.getMsgSize()
         # self.getServerDelay()
-        self._SERVER_DELAY = 0
         msg_str = " "
         msg_str = self._PROTOCOL_PHASE + self._WS + self._M_TYPE + self._WS + \
             str(self._PROBES) + self._WS + str(self._MSG_SIZE) + self._WS + str(self._SERVER_DELAY) + "\n"

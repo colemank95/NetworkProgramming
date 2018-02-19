@@ -1,0 +1,38 @@
+---
+title: "TCP Plots"
+author: "Kyle Coleman"
+date: "2/19/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(knitr)
+library(tidyr)
+library(tibble)
+opts_chunk$set(tidy.opts=list(width.cutoff=50),tidy=TRUE)
+```
+
+```{r}
+message_sizes_rtt <- c(1, 100, 200, 400, 800, 1000)
+message_sizes_tput <- c(1024, 2048, 4096, 8192, 16384, 32768)
+rtt <- c(0.00020362649645124163, 0.00022095044453938802, 0.00023412704467773438, 0.00021395683288574218, 0.00021524429321289061, 0.00021742071424211775)
+tput <- c(4683715.699018539, 8979651.46560736, 17426158.89640249, 34293600.70948884, 53840319.78868431, 90488400.51768246)
+
+plot(message_sizes_rtt, rtt, xlab="Message Size", ylab="Round-Trip-Time", main="Round trip time as a function of message size", ylim=c(min(rtt),max(rtt)), xlim=c(0, 1000), pch=15, col="blue")
+
+plot(message_sizes_tput, tput, xlab="Message Size", ylab="Throughput", main="Throughput as a function of message size", ylim=c(min(tput),max(tput)), xlim=c(min(message_sizes_tput),max(message_sizes_tput)), pch=15, col="blue")
+```
+
+```{r}
+message_sizes_rtt <- c(1, 100, 200, 400, 800, 1000)
+message_sizes_tput <- c(1024, 2048, 4096, 8192, 16384, 32768)
+rtt <- c(1.0022857870374406, 1.0035909175872804, 1.0030141989390056, 1.0028243700663249, 1.0027130285898844, 1.0037502924601236)
+tput <- c(1020.6828184780406, 2042.979589741206, 4081.4749983282773, 8159.225013999731, 16325.876980349261, 32658.012091540462)
+
+plot(message_sizes_rtt, rtt, xlab="Message Size", ylab="Round-Trip-Time", main="Round trip time as a function of message size with 1 second delay", ylim=c(min(rtt),max(rtt)), xlim=c(0,max(1000)), pch=15, col="blue")
+
+plot(message_sizes_tput, tput, xlab="Message Size", ylab="Throughput", main="Throughput as a function of message size with 1 second delay", ylim=c(min(tput),max(tput)), xlim=c(min(message_sizes_tput),max(message_sizes_tput)), pch=15, col="blue")
+```
